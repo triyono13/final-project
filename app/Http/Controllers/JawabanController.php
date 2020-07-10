@@ -4,24 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pertanyaan;
-use App\User;
 use App\Jawaban;
-use App\KomentarPertanyaan;
-use App\KomentarJawaban;
+use App\User;
 use DB;
 use Auth;
 
-class PertanyaanController extends Controller
+class JawabanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $pertanyaan = Pertanyaan::latest()->where('users_id', 'like','%'.Auth::id().'%')->paginate(10);
-        return view ('index', compact('pertanyaan'));
+        // $pertanyaan = Pertanyaan::findorfail($id);
+        // $jawaban = DB::table('jawabans')->join('pertanyaans', 'pertanyaans.id', '=', 'jawabans.pertanyaans_id')->select('jawabans.jawaban')->where('jawabans.pertanyaans_id', 'like','%'.$id.'%')->get();
+        // $hitung = $jawaban->count();
+        // return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung'));
     }
 
     /**
@@ -31,7 +31,7 @@ class PertanyaanController extends Controller
      */
     public function create()
     {
-        return view ('pertanyaan.create');
+        //
     }
 
     /**
@@ -40,20 +40,19 @@ class PertanyaanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($id, Request $request)
     {
         $this->validate($request, [
-            'judul' => 'required',
-            'isi' => 'required'
+            'jawaban' => 'required'
         ]);
         
-        $pertanyaan = Pertanyaan::create([
-            'judul' => $request->judul,
-            'isi_pertanyaan' => $request->isi,
+        $jawaban = Jawaban::create([
+            'jawaban' => $request->jawaban,
+            'pertanyaans_id' => $id,
             'users_id' => Auth::id()
 
         ]);
-        return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+        return redirect()->back()->with('success', 'Komentar berhasil diposting');
     }
 
     /**
@@ -64,14 +63,7 @@ class PertanyaanController extends Controller
      */
     public function show($id)
     {
-        $angka = "1";
-        $pertanyaan = Pertanyaan::findorfail($id);
-        $jawaban =  Jawaban::all();
-        $verif = DB::table('jawabans')->where('jawabans.pertanyaans_id', $id)->where('jawabans.status', $angka)->get();
-        $komentar_pertanyaan = DB::table('komentarpertanyaans')->join('pertanyaans', 'pertanyaans.id', '=', 'komentarpertanyaans.pertanyaans_id')->where('komentarpertanyaans.pertanyaans_id', $id)->get();
-        $komentar_jawaban = KomentarJawaban::all();
-        $hitung = $jawaban->count();
-        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif'));
+        //
     }
 
     /**
@@ -106,5 +98,21 @@ class PertanyaanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function verifikasi($Id, Request $request)
+    {
+        $poin = "15";
+        $verif = "1";
+        $verifikasi_data = [
+            'status' => $verif
+        ];
+        $reputasi_poin = [
+            'reputasi' => $poin
+        ];
+
+        User::whereId($request->user)->update($reputasi_poin);
+        Jawaban::whereId($Id)->update($verifikasi_data);
+        return redirect()->back()->with('success', 'Jawaban Telah ditandai');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKomentarPertanyaans extends Migration
+class CreateVotePertanyaan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateKomentarPertanyaans extends Migration
      */
     public function up()
     {
-        Schema::create('komentarpertanyaans', function (Blueprint $table) {
+        Schema::create('vote_pertanyaan', function (Blueprint $table) {
             $table->id();
             $table->integer('pertanyaans_id');
             $table->integer('users_id');
-            $table->text('isi_komentar');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateKomentarPertanyaans extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('komentar_pertanyaans');
+        Schema::dropIfExists('vote_pertanyaan');
     }
 }

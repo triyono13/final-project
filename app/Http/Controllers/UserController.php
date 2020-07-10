@@ -3,15 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Pertanyaan;
 use App\User;
-use App\Jawaban;
-use App\KomentarPertanyaan;
-use App\KomentarJawaban;
-use DB;
 use Auth;
 
-class PertanyaanController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,8 +15,9 @@ class PertanyaanController extends Controller
      */
     public function index()
     {
-        $pertanyaan = Pertanyaan::latest()->where('users_id', 'like','%'.Auth::id().'%')->paginate(10);
-        return view ('index', compact('pertanyaan'));
+        $id_auth = Auth::id();
+        $user = User::find($id_auth);
+        return view ('profile.index', compact('user'));
     }
 
     /**
@@ -31,7 +27,7 @@ class PertanyaanController extends Controller
      */
     public function create()
     {
-        return view ('pertanyaan.create');
+        //
     }
 
     /**
@@ -42,18 +38,7 @@ class PertanyaanController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'judul' => 'required',
-            'isi' => 'required'
-        ]);
-        
-        $pertanyaan = Pertanyaan::create([
-            'judul' => $request->judul,
-            'isi_pertanyaan' => $request->isi,
-            'users_id' => Auth::id()
-
-        ]);
-        return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+        //
     }
 
     /**
@@ -64,14 +49,7 @@ class PertanyaanController extends Controller
      */
     public function show($id)
     {
-        $angka = "1";
-        $pertanyaan = Pertanyaan::findorfail($id);
-        $jawaban =  Jawaban::all();
-        $verif = DB::table('jawabans')->where('jawabans.pertanyaans_id', $id)->where('jawabans.status', $angka)->get();
-        $komentar_pertanyaan = DB::table('komentarpertanyaans')->join('pertanyaans', 'pertanyaans.id', '=', 'komentarpertanyaans.pertanyaans_id')->where('komentarpertanyaans.pertanyaans_id', $id)->get();
-        $komentar_jawaban = KomentarJawaban::all();
-        $hitung = $jawaban->count();
-        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif'));
+        //
     }
 
     /**

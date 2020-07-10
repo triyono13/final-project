@@ -13,7 +13,7 @@ class CreateKomentarJawabans extends Migration
      */
     public function up()
     {
-        Schema::create('komentar_jawabans', function (Blueprint $table) {
+        Schema::create('komentarjawabans', function (Blueprint $table) {
             $table->id();
             $table->integer('jawabans_id');
             $table->integer('users_id');

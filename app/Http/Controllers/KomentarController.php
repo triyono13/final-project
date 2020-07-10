@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\KomentarPertanyaan;
 use App\KomentarJawaban;
+use App\Jawaban;
 use Auth;
 
 class KomentarController extends Controller
@@ -22,6 +23,11 @@ class KomentarController extends Controller
 
         ]);
         return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+    }
+    public function jawabanedit($id)
+    {
+        $jawaban = Jawaban::find($id);
+        return view ('komentar.create', compact('jawaban'));
     }
     public function jawaban(Request $request, $id)
     {

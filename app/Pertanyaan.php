@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Jawaban;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,12 +13,5 @@ class Pertanyaan extends Model
     {
         return $this->belongsTo('App\User');
     }
-        public function pertanyaan()
-    {
-        return $this->belongsTo('App\Jawaban');
-    }
-    public function jawaban()
-    {
-        return $this->belongsTo('App\Jawaban');
-    }
+
 }

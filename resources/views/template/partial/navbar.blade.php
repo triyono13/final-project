@@ -110,7 +110,10 @@
                     <a href="{{route('home')}}"><i class="fe-airplay"></i>Home</a>
                 </li>
                 <li class="has-submenu">
-                    <a href="{{route('pertanyaan.index')}}"><i class="fe-airplay"></i>Daftar Pertanyaanmu</a>
+                    <a href="{{route('pertanyaan.index')}}"><i class="fe-book"></i>Daftar Pertanyaanmu</a>
+                </li>
+                <li class="has-submenu">
+                    <a href="{{route('user.index')}}"><i class="fe-user"></i>Reputasi Saya</a>
                 </li>
             </ul>
             <!-- End navigation menu -->
