@@ -8,6 +8,8 @@ use App\User;
 use App\Jawaban;
 use App\KomentarPertanyaan;
 use App\KomentarJawaban;
+use App\VotePertanyaan;
+use App\VoteJawaban;
 use DB;
 use Auth;
 
@@ -70,8 +72,13 @@ class PertanyaanController extends Controller
         $verif = DB::table('jawabans')->where('jawabans.pertanyaans_id', $id)->where('jawabans.status', $angka)->get();
         $komentar_pertanyaan = DB::table('komentarpertanyaans')->join('pertanyaans', 'pertanyaans.id', '=', 'komentarpertanyaans.pertanyaans_id')->where('komentarpertanyaans.pertanyaans_id', $id)->get();
         $komentar_jawaban = KomentarJawaban::all();
-        $hitung = $jawaban->count();
-        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif'));
+        $hitungjawaban = DB::table('jawabans')->join('pertanyaans', 'pertanyaans.id', '=', 'jawabans.pertanyaans_id')->where('jawabans.pertanyaans_id', $id)->get();
+        $hitung = $hitungjawaban->count();
+        $vote_pertanyaan = DB::table('vote_pertanyaan')->join('pertanyaans', 'pertanyaans.id', '=', 'vote_pertanyaan.pertanyaans_id')->where('vote_pertanyaan.pertanyaans_id', $id)->where('vote_pertanyaan.vote', 'up')->get();
+        $vote_jawaban = DB::table('vote_jawaban')->join('pertanyaans', 'pertanyaans.id', '=', 'vote_jawaban.pertanyaans_id')->join('jawabans', 'jawabans.id', '=', 'vote_jawaban.jawabans_id')->where('vote_jawaban.pertanyaans_id', $id)->where('vote_jawaban.vote', 'up')->first();
+        $hitung_vote_pertanyaan = $vote_pertanyaan->count();
+        $komentar_pertanyaan = DB::table('komentarpertanyaans')->join('pertanyaans', 'pertanyaans.id', '=', 'komentarpertanyaans.pertanyaans_id')->where('komentarpertanyaans.pertanyaans_id', $id)->get();
+        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif',  'hitung_vote_pertanyaan', 'vote_jawaban'));
     }
 
     /**

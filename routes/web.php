@@ -26,5 +26,10 @@ Route::get('/komentar_jawaban_edit/{id}', 'KomentarController@jawabanedit')->nam
 Route::post('/komentar_jawaban/{id}', 'KomentarController@jawaban')->name('komentar.jawaban.simpan');
 Route::post('/jawaban_verif/{id}', 'JawabanController@verifikasi')->name('jawaban.verif');
 Route::post('/jawaban/{id}', 'JawabanController@store')->name('jawaban.simpan');
+Route::post('/vote_pertanyaanup/{id}', 'VoteController@votepertanyaanup')->name('vote.pertanyaanup');
+Route::post('/vote_pertanyaandown/{id}', 'VoteController@votepertanyaandown')->name('vote.pertanyaandown');
+Route::post('/vote_jawabanup/{id}', 'VoteController@votejawabanup')->name('vote.jawabanup');
+Route::post('/vote_jawabandown/{id}', 'VoteController@votejawabandown')->name('vote.jawabandown');
+
 
 Route::get('/home', 'HomeController@index')->name('home');

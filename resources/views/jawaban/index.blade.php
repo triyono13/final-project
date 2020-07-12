@@ -27,21 +27,26 @@
                             <div class="col-lg-11">
                                 <h2>{{$pertanyaan->isi_pertanyaan}} - {{$pertanyaan->users->name}}</h2>
                             </div>
-                            <div class="col-lg-1">
-                                <a href="" class="btn btn-primary">↑</a>
-                                <br><br>
-                                <h5>&nbsp;&nbsp;&nbsp;&nbsp;5</h5>
-                                <br>
-                                <a href="" class="btn btn-primary">↓</a>
-                            </div>
+                                <div class="col-lg-1">
+                                    <form class="form-horizontal" action="{{route('vote.pertanyaanup', $pertanyaan->id)}}" method="POST" enctype='multipart/form-data'>
+                                    @csrf
+                                        <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
+                                        <button class="btn btn-primary btn-sm">↑</button>
+                                    </form>
+                                        <h5>&nbsp;&nbsp;&nbsp;&nbsp;{{$hitung_vote_pertanyaan}}</h5>
+                                    <form class="form-horizontal" action="{{route('vote.pertanyaandown', $pertanyaan->id)}}" method="POST" enctype='multipart/form-data'>
+                                    @csrf
+                                        <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
+                                        <button class="btn btn-primary btn-sm">↓</button>
+                                    </form>
+                                </div>
                         </div>
                     @foreach ($komentar_pertanyaan as $komentar_pertanyaans)
-                    <hr>
                     <div class="row">
                         <div class="col-lg-1">
                         </div>
                         <div class="col-lg-5">
-                            <span>{!! $komentar_pertanyaans->isi_komentar !!}</span><hr></div>
+                            <hr><span>{!! $komentar_pertanyaans->isi_komentar !!}</span><hr></div>
                         </div>
                     @endforeach
                     <a href="#" class="btn btn-success btn-sm waves-effect waves-light" data-toggle="modal" data-target="#mKomentar">Tambah Komentar</a><br><br><br><br>
@@ -61,28 +66,37 @@
                                     <form class="form-horizontal" action="{{route('jawaban.verif', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
                                     @csrf
                                         <input type="text" value="{{$hasil->users_id}}" name="user" hidden readonly>
-                                        <br><button class="btn btn-primary btn-sm">Verifikasi Jawaban{{$hasil->id}}</button>
+                                        <button class="btn btn-primary btn-sm">Verifikasi Jawaban{{$hasil->id}}</button>
                                     </form>
-                                    <!-- <a href="{{route('jawaban.verif', $hasil->id, $hasil->users_id)}}" class="btn btn-primary btn-sm">Verifikasi Jawaban{{$hasil->id}}</a> -->
                                     @endif
                                 @endif
                             </div>
-                            <div class="col-lg-1">
-                                <a href="" class="btn btn-primary">↑</a>
-                                <br><br>
-                                <h5> &nbsp;&nbsp;&nbsp;&nbsp;5</h5>
-                                <br>
-                                <a href="" class="btn btn-primary">↓</a>
-                            </div>
+                                <div class="col-lg-1">
+                                    <form class="form-horizontal" action="{{route('vote.jawabanup', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
+                                        @csrf
+                                        <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
+                                        <button class="btn btn-primary btn-sm">↑</button>
+                                    </form>
+                                    <br><br>
+                                    <h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        {{$vote_jawaban->id}}
+                                    </h5>
+                                    <br>
+                                    <form class="form-horizontal" action="{{route('vote.pertanyaandown', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
+                                        @csrf
+                                        <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
+                                        <button class="btn btn-primary btn-sm">↓</button>
+                                    </form>
+                                </div>
                         </div>
                             @foreach ($komentar_jawaban as $komentar_jawabans)
                                 @if ($hasil->id == $komentar_jawabans->jawabans_id)
-                                <hr>
+                                
                                 <div class="row">
                                     <div class="col-lg-1">
                                     </div>
                                     <div class="col-lg-5">
-                                        <span>{!! $komentar_jawabans->isi_komentar!!}</span><hr>
+                                        <hr><span>{!! $komentar_jawabans->isi_komentar!!}</span><hr>
                                     </div>
                                 </div>
                                 @endif
