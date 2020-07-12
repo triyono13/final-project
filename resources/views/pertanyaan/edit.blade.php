@@ -68,5 +68,9 @@
     </div> <!-- end container-fluid -->
 </div>
 @include('sweetalert::alert')
+<script src="{{asset('ckeditor/ckeditor.js')}}"></script>
+<script>
+    CKEDITOR.replace( 'profile' );
+</script>
 
 @endsection
