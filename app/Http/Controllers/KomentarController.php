@@ -22,7 +22,8 @@ class KomentarController extends Controller
             'users_id' => Auth::id()
 
         ]);
-        return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+        alert()->success('Success','Komentar Berhasil Diposting');
+        return redirect()->back();
     }
     public function jawabanedit($id)
     {
@@ -41,6 +42,7 @@ class KomentarController extends Controller
             'users_id' => Auth::id()
 
         ]);
-        return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+        alert()->success('Success','Komentar Berhasil Diposting');
+        return redirect()->back();
     }
 }

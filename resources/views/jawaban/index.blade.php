@@ -14,6 +14,11 @@
               <div class="page-title-box"><br>
                   <h1>{{$pertanyaan->judul}}</h1>
                   <span>Pertanyaan dibuat : {{$pertanyaan->updated_at->diffForHumans()}}</span>
+                  - Tags :
+                  @foreach ($pertanyaan->tags as $tag)
+                    <span class="badge badge-primary">
+                    {{$tag->name}}</span>
+                  @endforeach
               </div>
           </div>
       </div><br>
@@ -74,16 +79,20 @@
                                 <div class="col-lg-1">
                                     <form class="form-horizontal" action="{{route('vote.jawabanup', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
                                         @csrf
+                                        <input type="text" value="{{$pertanyaan->id}}" name="id_pertanyaan" hidden readonly>
                                         <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
                                         <button class="btn btn-primary btn-sm">↑</button>
                                     </form>
-                                    <br><br>
                                     <h5> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        {{$vote_jawaban->id}}
+                                        @foreach ($vote_jawaban as $vote_jawabans)
+                                            @if ($hasil->id == $vote_jawabans->jawabans_id AND $vote_jawabans->pertanyaans_id == $pertanyaan->id)
+                                                {{ $jawaban->where('id', $vote_jawabans->jawabans_id)->count() }}
+                                            @endif
+                                        @endforeach
                                     </h5>
-                                    <br>
-                                    <form class="form-horizontal" action="{{route('vote.pertanyaandown', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
+                                    <form class="form-horizontal" action="{{route('vote.jawabandown', $hasil->id)}}" method="POST" enctype='multipart/form-data'>
                                         @csrf
+                                        <input type="text" value="{{$pertanyaan->id}}" name="id_pertanyaan" hidden readonly>
                                         <input type="text" value="{{$pertanyaan->users_id}}" name="user" hidden readonly>
                                         <button class="btn btn-primary btn-sm">↓</button>
                                     </form>
@@ -105,19 +114,6 @@
                         <a href="#" onclick="edit_kategori('{{route('komentar.jawaban.edit', $hasil->id)}}')" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Edit Kategori" class="btn btn-success btn-sm waves-effect waves-light" >Tambah Komentar</a><br><br><br>
                         @endif
                     @endforeach
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <form class="form-horizontal" action="{{route('jawaban.simpan', $pertanyaan->id)}}" method="POST" enctype='multipart/form-data'>
                     @csrf
                         <div class="form-group row">
@@ -138,8 +134,6 @@
         <!-- end row --> 
     </div> <!-- end container-fluid -->
 </div>
-
-
 
 <div id="mKomentar" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -184,6 +178,8 @@
         </div>
     </div>
 </div>
+@include('sweetalert::alert')
+
 
 <script src="{{asset('ckeditor/ckeditor.js')}}"></script>
 <script>

@@ -34,9 +34,9 @@
                     <label class="col-lg-2 col-form-label" for="simpleinput">Tags Pertanyaan</label>
                     <div class="col-lg-5">
                         <select class="select2 form-control select2-multiple" name="tags[]" data-toggle="select2" multiple="multiple">
-                            <option value="">== Pilih Tags ==</option>
-                            <option value="1">1</option>
-                            
+                            @foreach ($tag as $result)
+                                <option value="{{$result->id}}">{{$result->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>   
@@ -59,6 +59,6 @@
         
     </div> <!-- end container-fluid -->
 </div>
-
+@include('sweetalert::alert')
 
 @endsection

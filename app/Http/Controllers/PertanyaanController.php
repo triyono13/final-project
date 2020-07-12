@@ -10,6 +10,7 @@ use App\KomentarPertanyaan;
 use App\KomentarJawaban;
 use App\VotePertanyaan;
 use App\VoteJawaban;
+use App\Tag;
 use DB;
 use Auth;
 
@@ -33,7 +34,8 @@ class PertanyaanController extends Controller
      */
     public function create()
     {
-        return view ('pertanyaan.create');
+        $tag = Tag::all();
+        return view ('pertanyaan.create', compact('tag'));
     }
 
     /**
@@ -55,7 +57,10 @@ class PertanyaanController extends Controller
             'users_id' => Auth::id()
 
         ]);
-        return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+
+        $pertanyaan->tags()->attach($request->tags);
+        alert()->success('Success','Pertanyaan Berhasil Diposting');
+        return redirect()->back();
     }
 
     /**
@@ -66,6 +71,7 @@ class PertanyaanController extends Controller
      */
     public function show($id)
     {
+        $tags = Tag::all();
         $angka = "1";
         $pertanyaan = Pertanyaan::findorfail($id);
         $jawaban =  Jawaban::all();
@@ -75,10 +81,11 @@ class PertanyaanController extends Controller
         $hitungjawaban = DB::table('jawabans')->join('pertanyaans', 'pertanyaans.id', '=', 'jawabans.pertanyaans_id')->where('jawabans.pertanyaans_id', $id)->get();
         $hitung = $hitungjawaban->count();
         $vote_pertanyaan = DB::table('vote_pertanyaan')->join('pertanyaans', 'pertanyaans.id', '=', 'vote_pertanyaan.pertanyaans_id')->where('vote_pertanyaan.pertanyaans_id', $id)->where('vote_pertanyaan.vote', 'up')->get();
-        $vote_jawaban = DB::table('vote_jawaban')->join('pertanyaans', 'pertanyaans.id', '=', 'vote_jawaban.pertanyaans_id')->join('jawabans', 'jawabans.id', '=', 'vote_jawaban.jawabans_id')->where('vote_jawaban.pertanyaans_id', $id)->where('vote_jawaban.vote', 'up')->first();
+        $vote_jawaban = VoteJawaban::where('pertanyaans_id', '=', $id)->get();
+        $hitung_vote_jawaban = $vote_jawaban->count();
         $hitung_vote_pertanyaan = $vote_pertanyaan->count();
         $komentar_pertanyaan = DB::table('komentarpertanyaans')->join('pertanyaans', 'pertanyaans.id', '=', 'komentarpertanyaans.pertanyaans_id')->where('komentarpertanyaans.pertanyaans_id', $id)->get();
-        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif',  'hitung_vote_pertanyaan', 'vote_jawaban'));
+        return view ('jawaban.index', compact('pertanyaan', 'jawaban', 'hitung', 'komentar_pertanyaan', 'komentar_jawaban', 'verif',  'hitung_vote_pertanyaan', 'hitung_vote_jawaban', 'vote_jawaban', 'tags'));
     }
 
     /**

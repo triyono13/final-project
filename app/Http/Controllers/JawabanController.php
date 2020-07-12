@@ -52,7 +52,8 @@ class JawabanController extends Controller
             'users_id' => Auth::id()
 
         ]);
-        return redirect()->back()->with('success', 'Komentar berhasil diposting');
+        alert()->success('Success','Jawaban Berhasil Diposting');
+        return redirect()->back();
     }
 
     /**
@@ -113,6 +114,7 @@ class JawabanController extends Controller
 
         User::whereId($request->user)->update($reputasi_poin);
         Jawaban::whereId($Id)->update($verifikasi_data);
-        return redirect()->back()->with('success', 'Jawaban Telah ditandai');
+        alert()->success('Success','Jawaban Telah ditandai');
+        return redirect()->back();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use Illuminate\Http\Request;
 use App\VotePertanyaan;
 use App\VoteJawaban;
@@ -13,7 +14,8 @@ class VoteController extends Controller
     public function votepertanyaanup(Request $request, $id)
     {
         if (VotePertanyaan::where('users_id', '=', Auth::id())->where('pertanyaans_id', '=', $id)->exists()) {
-            return redirect()->back()->with('success', 'Anda Sudah Melakukan Voting Sebelumnya');
+            alert()->error('Error','Anda Telah Melakukan Voting !');
+            return redirect()->back();
         }
         else{
             $get_poin = User::find($request->user);
@@ -30,16 +32,18 @@ class VoteController extends Controller
             ];
             
             User::whereId($request->user)->update($reputasi_poin);
-            return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+            Alert::alert('Success', 'Anda Berhasil Melakukan Up-Vote');
+            return redirect()->back();
         }
     }
     public function votepertanyaandown(Request $request, $id)
     {
+        $get_poin = User::find($request->user);
         if (VotePertanyaan::where('users_id', '=', Auth::id())->where('pertanyaans_id', '=', $id)->exists()) {
-            return redirect()->back()->with('success', 'Anda Sudah Melakukan Voting Sebelumnya');
+            alert()->error('Error','Anda Telah Melakukan Voting !');
+            return redirect()->back();
         }
         else{
-            $get_poin = User::find($request->user);
             $vote = "down";
             $poin = "1";
             $vote = VotePertanyaan::create([
@@ -53,14 +57,16 @@ class VoteController extends Controller
             ];
 
             User::whereId($request->user)->update($reputasi_poin);
-            return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+            alert()->success('Success','Anda Berhasil Melakukan Down-Vote');
+            return redirect()->back();
         }
     }
 
     public function votejawabanup(Request $request, $id)
     {
         if (VoteJawaban::where('users_id', '=', Auth::id())->where('jawabans_id', '=', $id)->exists()) {
-            return redirect()->back()->with('success', 'Anda Sudah Melakukan Voting Sebelumnya');
+            alert()->error('Error','Anda Telah Melakukan Voting !');
+            return redirect()->back();
         }
         else{
             $get_poin = User::find($request->user);
@@ -69,6 +75,7 @@ class VoteController extends Controller
             $vote = VoteJawaban::create([
                 'jawabans_id' => $id,
                 'users_id' => Auth::id(),
+                'pertanyaans_id' => $request->id_pertanyaan,
                 'vote' => $vote
 
             ]);
@@ -77,11 +84,34 @@ class VoteController extends Controller
             ];
 
             User::whereId($request->user)->update($reputasi_poin);
-            return redirect()->back()->with('success', 'Pertanyaan berhasil diposting');
+            alert()->success('Success','Anda Berhasil Melakukan Up-Vote');
+            return redirect()->back();
         }
     }
     public function votejawabandown(Request $request, $id)
     {
-        dd($request->user);
+        $get_poin = User::find($request->user);
+        if (VoteJawaban::where('users_id', '=', Auth::id())->where('jawabans_id', '=', $id)->exists()) {
+            alert()->error('Error','Anda Telah Melakukan Voting !');
+            return redirect()->back();
+        }
+        else{
+            $vote = "up";
+            $poin = "1";
+            $vote = VoteJawaban::create([
+                'jawabans_id' => $id,
+                'users_id' => Auth::id(),
+                'pertanyaans_id' => $request->id_pertanyaan,
+                'vote' => $vote
+
+            ]);
+            $reputasi_poin = [
+                'reputasi' => $get_poin->reputasi - $poin
+            ];
+
+            User::whereId($request->user)->update($reputasi_poin);
+            alert()->success('Success','Anda Berhasil Melakukan Down-Vote');
+            return redirect()->back();
+        }
     }
 }
