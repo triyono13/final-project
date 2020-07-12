@@ -23,9 +23,9 @@
                                     <tr>
                                         <th>No. </th>
                                         <th>Judul Pertanyaan</th>
-                                        <th>Tags</th>
                                         <th>Created Date</th>
                                         <th>Updated Date</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,9 +33,17 @@
                                 @foreach ($pertanyaan as $result => $hasil)
                                     <td>{{$result + $pertanyaan -> firstitem()}}</td>
                                     <td><a href="#">{{$hasil->judul}}</a></td>
-                                    <td>#</td>
                                     <td>{{$hasil->created_at}}</td>
                                     <td>{{$hasil->updated_at}}</td>
+                                    <td>
+                                        <form action="{{route('pertanyaan.destroy', $hasil->id)}}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <a href="{{route('pertanyaan.edit', $hasil->id)}}" data-content="Ubah Data Kategori" class="btn btn-primary btn-flat btn-xs">
+                                        <span class="dripicons dripicons-document-edit"></span> Edit</a>
+                                        <button type="submit" class="btn btn-danger btn-xs btn-flat" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Hapus Kategori" onclick="return confirm('Yakin ingin menghapus data Kategori {{ $hasil->judul}}?')"><span class="dripicons dripicons-trash"> Hapus</span></button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 @endforeach
                                 </tbody>

@@ -23,8 +23,9 @@ class PertanyaanController extends Controller
      */
     public function index()
     {
+        $tag = Tag::all();
         $pertanyaan = Pertanyaan::latest()->where('users_id', 'like','%'.Auth::id().'%')->paginate(10);
-        return view ('index', compact('pertanyaan'));
+        return view ('pertanyaan.index', compact('pertanyaan', 'tag'));
     }
 
     /**
@@ -96,7 +97,9 @@ class PertanyaanController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tag = Tag::all();
+        $pertanyaan = Pertanyaan::find($id);
+        return view ('pertanyaan.edit', compact('tag', 'pertanyaan'));
     }
 
     /**
@@ -108,7 +111,13 @@ class PertanyaanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pertanyaan_data = [
+            'judul' => $request->judul,
+            'isi_pertanyaan' => $request->isi
+        ];
+        Pertanyaan::whereId($id)->update($pertanyaan_data);
+        alert()->success('Success','Pertanyaan Berhasil DiUpdate');
+        return redirect()->back();
     }
 
     /**
@@ -119,6 +128,9 @@ class PertanyaanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pertanyaan = Pertanyaan::findorfail($id);
+        $pertanyaan->delete();
+        alert()->success('Success','Pertanyaan Berhasil Dihapus');
+        return redirect()->back();
     }
 }
